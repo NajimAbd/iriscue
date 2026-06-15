@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>IrisCue v11</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f0f0;min-height:100vh;padding:16px}
+.wrap{max-width:620px;margin:0 auto}
+.header{background:#0D1A12;border-radius:14px 14px 0 0;padding:16px 22px;display:flex;align-items:center;justify-content:space-between}
+.logo{color:#B8965A;font-size:17px;font-weight:600;display:flex;align-items:center;gap:10px}
+.logo svg{width:26px;height:26px}
+.header-right{display:flex;align-items:center;gap:8px}
+.version{background:rgba(184,150,90,0.12);color:rgba(184,150,90,0.7);border:1px solid rgba(184,150,90,0.2);border-radius:20px;font-size:10px;padding:3px 9px;font-weight:500}
+.badge{background:rgba(184,150,90,0.15);color:#B8965A;border:1px solid rgba(184,150,90,0.35);border-radius:20px;font-size:11px;padding:4px 12px}
+.body{background:#fff;border:1px solid #e0e0e0;border-top:none;border-radius:0 0 14px 14px;padding:22px}
+.lbl{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.lang-row{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.lang-btn{padding:9px 20px;border-radius:9px;border:1.5px solid #ddd;background:#fff;color:#666;cursor:pointer;font-size:14px;font-family:inherit;transition:all .15s}
+.lang-btn.on{background:#0D1A12;color:#B8965A;border-color:#0D1A12}
+
+.device-box{background:#f8f8f8;border:1.5px solid #e0e0e0;border-radius:12px;padding:14px 16px;margin-bottom:20px}
+.device-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.device-row:last-child{margin-bottom:0}
+.device-icon{font-size:18px;flex-shrink:0;width:28px;text-align:center}
+.device-label{font-size:12px;font-weight:600;color:#888;min-width:60px}
+.device-select{flex:1;padding:8px 12px;border:1.5px solid #ddd;border-radius:9px;background:#fff;color:#222;font-size:13px;font-family:inherit;outline:none;cursor:pointer}
+.device-select:focus{border-color:#0D1A12}
+
+.import-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.import-card{border:1.5px solid #e0e0e0;border-radius:12px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;background:#f8f8f8;transition:all .2s;text-align:center}
+.import-card:active{background:#eee;border-color:#0D1A12}
+.import-card svg{width:28px;height:28px}
+.import-card-label{font-size:13px;font-weight:600;color:#333}
+.import-card-sub{font-size:11px;color:#999}
+input[type=file]{display:none}
+
+.gdrive-panel{background:#f5f5f5;border:1.5px solid #ddd;border-radius:12px;padding:18px;margin-bottom:16px;display:none}
+.gdrive-panel.on{display:block}
+.gdrive-title{font-size:15px;font-weight:600;color:#222;margin-bottom:4px}
+.gdrive-sub{font-size:13px;color:#666;margin-bottom:14px}
+.gdrive-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.gdrive-row input{flex:1;min-width:0;padding:10px 12px;border:1.5px solid #ddd;border-radius:9px;background:#fff;color:#222;font-size:13px;outline:none;font-family:inherit}
+.gdrive-go{padding:10px 18px;border-radius:9px;border:none;background:#0D1A12;color:#B8965A;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.gdrive-steps{font-size:12px;color:#666;line-height:2}
+.gdrive-steps b{color:#333}
+.gdrive-close{margin-top:10px;font-size:12px;color:#999;border:none;background:none;cursor:pointer;font-family:inherit;padding:4px}
+
+.textarea-box{border:1.5px solid #e0e0e0;border-radius:12px;overflow:hidden;margin-bottom:20px;background:#f8f8f8}
+.textarea-box textarea{width:100%;min-height:130px;border:none;outline:none;background:transparent;font-size:17px;color:#222;resize:none;font-family:inherit;line-height:1.9;padding:16px;direction:rtl}
+
+.sliders-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.slider-3d{border-radius:14px;padding:16px;position:relative;overflow:hidden}
+.slider-3d.green{background:#1a3d20;border-top:1px solid #2d6b35;border-left:1px solid #2d6b35;border-right:1px solid #0a1f0d;border-bottom:3px solid #071209}
+.slider-3d.gold{background:#3d2e0a;border-top:1px solid #6b4f12;border-left:1px solid #6b4f12;border-right:1px solid #1f1605;border-bottom:3px solid #120d03}
+.slider-shine{position:absolute;top:0;left:0;right:0;height:38%;background:rgba(255,255,255,0.05);border-radius:14px 14px 0 0;pointer-events:none}
+.slider-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.slider-ico-g{font-size:16px;margin-right:6px;color:#4CAF50;font-weight:700}
+.slider-ico-o{font-size:16px;margin-right:6px;color:#B8965A}
+.slider-name-g{font-size:12px;font-weight:600;color:#7dd98a}
+.slider-name-o{font-size:12px;font-weight:600;color:#d4a84b}
+.slider-val-g{font-size:18px;font-weight:700;color:#4CAF50}
+.slider-val-o{font-size:18px;font-weight:700;color:#B8965A}
+input[type=range]{width:100%;outline:none;cursor:pointer}
+input[type=range].g{accent-color:#4CAF50}
+input[type=range].o{accent-color:#B8965A}
+
+.start-btn{width:100%;padding:16px;border-radius:12px;border:none;background:#0D1A12;border-top:1px solid #2d6b35;border-left:1px solid #2d6b35;border-right:1px solid #060e08;border-bottom:3px solid #030704;color:#B8965A;font-size:17px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;font-family:inherit;transition:all .1s}
+.start-btn:active{transform:translateY(2px);border-bottom-width:1px}
+.start-btn svg{width:22px;height:22px;flex-shrink:0}
+.hint{font-size:12px;text-align:center;margin-top:6px}
+
+.screen-wrap{display:none}
+.screen-wrap.on{display:block}
+.screen{background:#060D07;border-radius:14px;overflow:hidden;border:1px solid rgba(184,150,90,0.2)}
+.cam-preview{position:relative;background:#000;width:100%;aspect-ratio:16/9;overflow:hidden}
+.cam-preview video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.cam-overlay{position:absolute;top:8px;right:8px;display:flex;align-items:center;gap:6px}
+.rec-dot{width:10px;height:10px;border-radius:50%;background:#e87070;animation:recblink 1s ease-in-out infinite alternate;display:none}
+.rec-dot.on{display:block}
+@keyframes recblink{from{opacity:0.4}to{opacity:1}}
+.rec-label{font-size:12px;font-weight:700;color:#e87070;letter-spacing:.05em;display:none}
+.rec-label.on{display:block}
+.rec-time{font-size:12px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 8px;border-radius:20px;display:none}
+.rec-time.on{display:block}
+
+.screen-top{background:#0D1A12;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.screen-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.mic-dot{width:10px;height:10px;border-radius:50%;background:#1e3d21;transition:background .2s;flex-shrink:0}
+.mic-dot.live{background:#4CAF50;animation:pb .6s ease-in-out infinite alternate}
+@keyframes pb{from{opacity:.5;transform:scale(.9)}to{opacity:1;transform:scale(1.1)}}
+.mic-txt{color:rgba(184,150,90,.85);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.pct{color:rgba(184,150,90,.5);font-size:12px;min-width:28px;text-align:right}
+.sz-btn{width:34px;height:34px;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#4CAF50;background:#1a2e1c;border:1px solid #2d6b35;line-height:1;font-family:inherit}
+.sz-btn:active{transform:translateY(1px)}
+
+.scroll-box{position:relative;overflow:hidden}
+.fade-t{position:absolute;top:0;left:0;right:0;height:80px;background:linear-gradient(to bottom,#060D07,transparent);z-index:2;pointer-events:none}
+.fade-b{position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(to top,#060D07,transparent);z-index:2;pointer-events:none}
+.cursor-line{position:absolute;top:50%;left:3%;right:3%;height:3px;background:#B8965A;opacity:0.85;z-index:3;pointer-events:none;border-radius:2px}
+.scroll-text{color:#E8DEC8;white-space:pre-wrap;word-break:break-word;font-family:inherit}
+.scroll-text.ltr{text-align:left;direction:ltr}
+.scroll-text.rtl{text-align:right;direction:rtl}
+
+.screen-btns{background:#0D1A12;padding:12px 14px;display:flex;gap:8px;border-top:1px solid rgba(184,150,90,.1)}
+.sc-btn{flex:1;padding:12px 4px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;font-size:13px;font-weight:600;font-family:inherit;transition:all .1s;border:none}
+.sc-btn:active{transform:translateY(2px)}
+.sc-pause{color:#B8965A;background:#1a2e1c;border-top:1px solid #2d6b35;border-bottom:3px solid #050e06}
+.sc-top{color:#7dd98a;background:#0f2412;border-top:1px solid #1e5228;border-bottom:3px solid #030704}
+.sc-rec{color:#e87070;background:#2a0f0f;border-top:1px solid #5c1e1e;border-bottom:3px solid #0a0404}
+.sc-stop{color:#aaa;background:#1a1a1a;border-top:1px solid #333;border-bottom:3px solid #080808}
+
+.dl-banner{display:none;background:#0D1A12;border-radius:12px;margin-top:10px;padding:16px 18px;align-items:center;justify-content:space-between;gap:12px}
+.dl-banner.on{display:flex}
+.dl-txt{color:#B8965A;font-size:14px;font-weight:500}
+.dl-btn{padding:10px 20px;border-radius:9px;border:none;background:#B8965A;color:#0D1A12;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block}
+
+@media(max-width:480px){body{padding:8px}.body{padding:16px}.start-btn{font-size:16px;padding:15px}.lang-btn{padding:9px 14px;font-size:13px}.cam-preview{aspect-ratio:4/3}}
+</style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://apis.google.com/js/api.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <div id="editorView">
+    <div class="header">
+      <div class="logo">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="50" rx="46" ry="46" fill="none" stroke="#B8965A" stroke-width="4"/>
+          <ellipse cx="50" cy="50" rx="27" ry="46" fill="none" stroke="#B8965A" stroke-width="3"/>
+          <ellipse cx="50" cy="50" rx="46" ry="27" fill="none" stroke="#B8965A" stroke-width="3"/>
+          <circle cx="50" cy="50" r="9" fill="#B8965A"/>
+          <circle cx="50" cy="50" r="4" fill="#0D1A12"/>
+        </svg>
+        IrisCue
+      </div>
+      <div class="header-right">
+        <span class="version">v11</span>
+        <span class="badge">AR · FR · EN</span>
+      </div>
+    </div>
+    <div class="body">
+
+      <div class="lbl">Langue</div>
+      <div class="lang-row">
+        <button class="lang-btn on" onclick="setLang('ar')" id="l-ar">العربية</button>
+        <button class="lang-btn" onclick="setLang('fr')" id="l-fr">Français</button>
+        <button class="lang-btn" onclick="setLang('en')" id="l-en">English</button>
+      </div>
+
+      <div class="lbl">Appareils audio &amp; vidéo</div>
+      <div class="device-box">
+        <div class="device-row">
+          <span class="device-icon">🎙</span>
+          <span class="device-label">Micro</span>
+          <select class="device-select" id="micSelect" onchange="saveDeviceChoice()"></select>
+        </div>
+        <div class="device-row">
+          <span class="device-icon">📷</span>
+          <span class="device-label">Caméra</span>
+          <select class="device-select" id="camSelect" onchange="saveDeviceChoice()"></select>
+        </div>
+      </div>
+
+      <div class="lbl">Importer</div>
+      <div class="import-row">
+        <label class="import-card" for="fileLocal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <span class="import-card-label">Fichier local</span>
+          <span class="import-card-sub">.txt</span>
+          <input type="file" id="fileLocal" accept=".txt" onchange="loadLocal(this)">
+        </label>
+        <div class="import-card" onclick="openGooglePicker()">
+          <svg viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg">
+            <path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/>
+            <path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0-1.2 4.5h27.5z" fill="#00ac47"/>
+            <path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.5l5.85 11.5z" fill="#ea4335"/>
+            <path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/>
+            <path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/>
+            <path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/>
+          </svg>
+          <span class="import-card-label">Google Drive</span>
+          <span class="import-card-sub">Connexion directe</span>
+        </div>
+      </div>
+
+
+
+      <div class="lbl">Script</div>
+      <div class="textarea-box">
+        <textarea id="scriptInput" dir="rtl" placeholder="اكتب نصك هنا...">بسم الله الرحمن الرحيم، أهلاً وسهلاً بكم في روقية سويس. اليوم سنتحدث عن أهمية الرقية الشرعية وكيف يمكن أن تساعدكم في حياتكم اليومية. نسأل الله أن يبارك في هذا اللقاء وأن يجعله نافعاً للجميع.</textarea>
+      </div>
+
+      <div class="lbl">Réglages</div>
+      <div class="sliders-row">
+        <div class="slider-3d green">
+          <div class="slider-shine"></div>
+          <div class="slider-top">
+            <div style="display:flex;align-items:center">
+              <span class="slider-ico-g">Aa</span>
+              <span class="slider-name-g">Texte</span>
+            </div>
+            <span class="slider-val-g"><span id="fsVal">28</span>px</span>
+          </div>
+          <input type="range" class="g" min="16" max="52" value="28" step="2" id="fsSlider" oninput="document.getElementById('fsVal').textContent=this.value">
+        </div>
+        <div class="slider-3d gold">
+          <div class="slider-shine"></div>
+          <div class="slider-top">
+            <div style="display:flex;align-items:center">
+              <span class="slider-ico-o">🎙</span>
+              <span class="slider-name-o">Voix</span>
+            </div>
+            <span class="slider-val-o"><span id="sensVal">5</span>/10</span>
+          </div>
+          <input type="range" class="o" min="1" max="10" value="5" step="1" id="sensSlider" oninput="document.getElementById('sensVal').textContent=this.value;sens=parseInt(this.value)">
+        </div>
+      </div>
+
+      <button class="start-btn" onclick="startPrompter()">
+        <svg viewBox="0 0 24 24" fill="#B8965A"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Démarrer IrisCue
+      </button>
+      <p class="hint" id="hintTxt" style="color:#aaa">🎙 Choisissez votre micro et caméra ci-dessus</p>
+      <div id="editorDlBanner" style="display:none;margin-top:14px;background:#0D1A12;border-radius:12px;padding:16px 18px;display:none;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div>
+          <div style="color:#B8965A;font-size:14px;font-weight:600">✅ Enregistrement prêt</div>
+          <div style="color:rgba(184,150,90,0.6);font-size:12px;margin-top:2px" id="recDuration"></div>
+        </div>
+        <a id="editorDlLink" class="dl-btn" download="IrisCue_video.webm" style="padding:10px 20px;border-radius:9px;border:none;background:#B8965A;color:#0D1A12;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block">⬇ Télécharger la vidéo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-wrap" id="prompterView">
+    <div class="screen">
+      <div class="cam-preview">
+        <video id="camVideo" autoplay muted playsinline></video>
+        <div class="cam-overlay">
+          <div class="rec-dot" id="recDot"></div>
+          <span class="rec-label" id="recLabel">REC</span>
+          <span class="rec-time" id="recTime">00:00</span>
+        </div>
+      </div>
+      <div class="screen-top">
+        <div class="screen-left">
+          <div class="mic-dot" id="micDot"></div>
+          <span class="mic-txt" id="micTxt">En écoute...</span>
+        </div>
+        <div class="screen-right">
+          <span class="pct" id="pctTxt">0%</span>
+          <button class="sz-btn" onclick="adjFont(-2)">−</button>
+          <button class="sz-btn" onclick="adjFont(2)">+</button>
+        </div>
+      </div>
+      <div class="scroll-box" id="scrollBox">
+        <div class="fade-t"></div>
+        <div class="scroll-text rtl" id="scrollText"></div>
+        <div class="fade-b"></div>
+        <div class="cursor-line"></div>
+      </div>
+      <div class="screen-btns">
+        <button class="sc-btn sc-pause" onclick="togglePause()">
+          <span id="pauseIco">⏸</span><span id="pauseTxt">Pause</span>
+        </button>
+        <button class="sc-btn sc-top" onclick="goTop()">↑ Début</button>
+        <button class="sc-btn sc-rec" onclick="toggleRec()" id="recBtn">⏺ Enreg.</button>
+        <button class="sc-btn sc-stop" onclick="stopPrompter()">✕ Fin</button>
+      </div>
+    </div>
+    <div class="dl-banner" id="dlBanner">
+      <span class="dl-txt">✅ Vidéo prête !</span>
+      <a id="dlLink" class="dl-btn" download="IrisCue_video.webm">⬇ Télécharger</a>
+    </div>
+  </div>
+</div>
+
+<script>
+let lang='ar', sens=5, recog=null;
+let running=false, paused=false;
+let sy=0, maxSy=0, tgtSpd=0, curSpd=0, raf=null, nst=null;
+let mediaStream=null, mediaRecorder=null, recChunks=[], isRecording=false;
+let recSeconds=0, recTimer=null;
+const isMobile=window.innerWidth<=480;
+
+// === CHARGEMENT APPAREILS SANS PERMISSION ===
+async function loadDevices(){
+  const micSel=document.getElementById('micSelect');
+  const camSel=document.getElementById('camSelect');
+  const savedMic=localStorage.getItem('iriscue_mic');
+  const savedCam=localStorage.getItem('iriscue_cam');
+  try{
+    const devices=await navigator.mediaDevices.enumerateDevices();
+    micSel.innerHTML='';camSel.innerHTML='';
+    let mi=0,ci=0;
+    devices.forEach(d=>{
+      if(d.kind==='audioinput'){
+        const o=document.createElement('option');
+        o.value=d.deviceId;
+        o.textContent=d.label||'Micro '+(++mi);
+        if(savedMic&&d.deviceId===savedMic)o.selected=true;
+        micSel.appendChild(o);
+      }
+      if(d.kind==='videoinput'){
+        const o=document.createElement('option');
+        o.value=d.deviceId;
+        o.textContent=d.label||'Caméra '+(++ci);
+        if(savedCam&&d.deviceId===savedCam)o.selected=true;
+        camSel.appendChild(o);
+      }
+    });
+    if(!micSel.options.length)micSel.innerHTML='<option value="">Micro par défaut</option>';
+    if(!camSel.options.length)camSel.innerHTML='<option value="">Caméra par défaut</option>';
+  }catch(e){
+    micSel.innerHTML='<option value="">Micro par défaut</option>';
+    camSel.innerHTML='<option value="">Caméra par défaut</option>';
+  }
+}
+
+// === SAUVEGARDER CHOIX DANS LOCALSTORAGE ===
+function saveDeviceChoice(){
+  const micId=document.getElementById('micSelect').value;
+  const camId=document.getElementById('camSelect').value;
+  if(micId)localStorage.setItem('iriscue_mic',micId);
+  if(camId)localStorage.setItem('iriscue_cam',camId);
+}
+
+function setLang(l){
+  lang=l;
+  ['ar','fr','en'].forEach(x=>document.getElementById('l-'+x).classList.remove('on'));
+  document.getElementById('l-'+l).classList.add('on');
+  const ta=document.getElementById('scriptInput');
+  ta.dir=l==='ar'?'rtl':'ltr';
+  ta.placeholder=l==='ar'?'اكتب نصك هنا...':l==='fr'?'Écrivez votre script ici...':'Write your script here...';
+}
+
+function toggleGDrive(){document.getElementById('gdrivePanel').classList.toggle('on');}
+
+function importGDrive_old(){
+  const url=document.getElementById('gdriveUrl').value.trim();
+  const m=url.match(/\/document\/d\/([a-zA-Z0-9_-]+)/);
+  if(!m){alert('Lien invalide.');return;}
+  document.getElementById('scriptInput').value='⏳ Chargement...';
+  fetch('https://docs.google.com/document/d/'+m[1]+'/export?format=txt')
+    .then(r=>{if(!r.ok)throw 0;return r.text();})
+    .then(t=>{document.getElementById('scriptInput').value=t.trim();if(/[\u0600-\u06FF]/.test(t))setLang('ar');toggleGDrive();})
+    .catch(()=>{document.getElementById('scriptInput').value='❌ Erreur : partagez le document publiquement.';});
+}
+
+function loadLocal(inp){
+  const f=inp.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{document.getElementById('scriptInput').value=e.target.result;if(/[\u0600-\u06FF]/.test(e.target.result))setLang('ar');};
+  r.readAsText(f,'UTF-8');
+}
+
+// === DÉMARRER — POPUP UNE SEULE FOIS ICI ===
+async function startPrompter(){
+  const txt=document.getElementById('scriptInput').value.trim();if(!txt)return;
+  const micId=document.getElementById('micSelect').value;
+  const camId=document.getElementById('camSelect').value;
+  saveDeviceChoice();
+  const constraints={
+    audio:micId?{deviceId:{exact:micId}}:true,
+    video:camId?{deviceId:{exact:camId},facingMode:'user'}:{facingMode:'user'}
+  };
+  try{
+    mediaStream=await navigator.mediaDevices.getUserMedia(constraints);
+    document.getElementById('camVideo').srcObject=mediaStream;
+    // Recharger avec vrais noms après permission
+    await loadDevices();
+  }catch(e){
+    try{
+      mediaStream=await navigator.mediaDevices.getUserMedia({audio:micId?{deviceId:{exact:micId}}:true});
+    }catch(e2){
+      alert('Impossible d\'accéder au microphone.');return;
+    }
+  }
+  document.getElementById('editorView').style.display='none';
+  document.getElementById('prompterView').classList.add('on');
+  applyScreenLayout();
+  const st=document.getElementById('scrollText');
+  st.textContent=txt;
+  st.className='scroll-text '+(lang!=='ar'?'ltr':'rtl');
+  const fs=isMobile?Math.min(parseInt(document.getElementById('fsSlider').value),36):parseInt(document.getElementById('fsSlider').value);
+  st.style.fontSize=fs+'px';
+  sy=0;tgtSpd=0;curSpd=0;st.style.transform='translateY(0)';
+  running=true;paused=false;
+  document.getElementById('dlBanner').classList.remove('on');
+  setTimeout(()=>{const b=document.getElementById('scrollBox');maxSy=Math.max(0,st.scrollHeight-b.clientHeight+160);},150);
+  startVoice();
+  raf=requestAnimationFrame(loop);
+}
+
+function applyScreenLayout(){
+  const box=document.getElementById('scrollBox');
+  const st=document.getElementById('scrollText');
+  if(isMobile){box.style.height='38vh';st.style.paddingTop='19vh';st.style.paddingBottom='19vh';st.style.paddingLeft='1rem';st.style.paddingRight='1rem';st.style.lineHeight='2.2';}
+  else{box.style.height='280px';st.style.paddingTop='140px';st.style.paddingBottom='140px';st.style.paddingLeft='2rem';st.style.paddingRight='2rem';st.style.lineHeight='2.0';}
+}
+
+function loop(){
+  if(!running)return;
+  if(!paused){
+    curSpd+=(tgtSpd-curSpd)*.07;
+    if(sy<maxSy){sy+=curSpd;if(sy>maxSy)sy=maxSy;}
+    document.getElementById('scrollText').style.transform='translateY(-'+Math.round(sy)+'px)';
+    const p=maxSy>0?Math.min(100,Math.round(sy/maxSy*100)):0;
+    document.getElementById('pctTxt').textContent=p+'%';
+  }
+  raf=requestAnimationFrame(loop);
+}
+
+function startVoice(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){tgtSpd=.45;document.getElementById('micTxt').textContent='Défilement auto';return;}
+  recog=new SR();
+  recog.continuous=true;recog.interimResults=true;
+  recog.lang=lang==='ar'?'ar-SA':lang==='fr'?'fr-FR':'en-US';
+  recog.onstart=()=>{document.getElementById('micDot').classList.add('live');document.getElementById('micTxt').textContent='En écoute...';};
+  recog.onresult=()=>{
+    clearTimeout(nst);
+    document.getElementById('micDot').classList.add('live');
+    document.getElementById('micTxt').textContent='Voix détectée ✓';
+    tgtSpd=.45*(sens/5);
+    nst=setTimeout(()=>{tgtSpd=0;document.getElementById('micDot').classList.remove('live');document.getElementById('micTxt').textContent='En pause...';},100);
+  };
+  recog.onerror=()=>{tgtSpd=.4;document.getElementById('micTxt').textContent='Mode auto';};
+  recog.onend=()=>{if(running&&!paused)try{recog.start();}catch(e){}};
+  try{recog.start();}catch(e){}
+}
+
+function toggleRec(){
+  if(!isRecording){
+    if(!mediaStream){alert('Caméra non disponible.');return;}
+    recChunks=[];
+    const opts=MediaRecorder.isTypeSupported('video/webm;codecs=vp9')?{mimeType:'video/webm;codecs=vp9'}:
+                MediaRecorder.isTypeSupported('video/webm')?{mimeType:'video/webm'}:{};
+    mediaRecorder=new MediaRecorder(mediaStream,opts);
+    mediaRecorder.ondataavailable=e=>{if(e.data.size>0)recChunks.push(e.data);};
+    mediaRecorder.onstop=()=>{
+      const blob=new Blob(recChunks,{type:'video/webm'});
+      const url=URL.createObjectURL(blob);
+      document.getElementById('dlLink').href=url;
+      document.getElementById('dlBanner').classList.add('on');
+      showEditorDownload(url, recSeconds);
+    };
+    mediaRecorder.start(1000);
+    isRecording=true;recSeconds=0;
+    document.getElementById('recDot').classList.add('on');
+    document.getElementById('recLabel').classList.add('on');
+    document.getElementById('recTime').classList.add('on');
+    document.getElementById('recBtn').textContent='⏹ Stop';
+    recTimer=setInterval(()=>{recSeconds++;const m=String(Math.floor(recSeconds/60)).padStart(2,'0');const s=String(recSeconds%60).padStart(2,'0');document.getElementById('recTime').textContent=m+':'+s;},1000);
+  }else{
+    mediaRecorder.stop();isRecording=false;clearInterval(recTimer);
+    document.getElementById('recDot').classList.remove('on');
+    document.getElementById('recLabel').classList.remove('on');
+    document.getElementById('recTime').classList.remove('on');
+    document.getElementById('recBtn').textContent='⏺ Enreg.';
+  }
+}
+
+function togglePause(){
+  paused=!paused;
+  document.getElementById('pauseIco').textContent=paused?'▶':'⏸';
+  document.getElementById('pauseTxt').textContent=paused?'Reprendre':'Pause';
+  if(paused){tgtSpd=0;document.getElementById('micDot').classList.remove('live');document.getElementById('micTxt').textContent='En pause';}
+  else document.getElementById('micTxt').textContent='En écoute...';
+}
+
+function goTop(){sy=0;document.getElementById('scrollText').style.transform='translateY(0)';document.getElementById('pctTxt').textContent='0%';}
+
+function adjFont(d){
+  const st=document.getElementById('scrollText');
+  const c=parseInt(st.style.fontSize)||28;
+  const max=isMobile?42:64;
+  st.style.fontSize=Math.min(max,Math.max(14,c+d))+'px';
+  setTimeout(()=>{const b=document.getElementById('scrollBox');maxSy=Math.max(0,st.scrollHeight-b.clientHeight+160);},80);
+}
+
+function stopPrompter(){
+  running=false;tgtSpd=0;curSpd=0;
+  if(isRecording)toggleRec();
+  if(recog)try{recog.stop();}catch(e){}
+  if(raf)cancelAnimationFrame(raf);
+  clearTimeout(nst);
+  if(mediaStream)mediaStream.getTracks().forEach(t=>t.stop());
+  document.getElementById('prompterView').classList.remove('on');
+  document.getElementById('editorView').style.display='block';
+  document.getElementById('micDot').classList.remove('live');
+  sy=0;
+  document.getElementById('pauseIco').textContent='⏸';
+  document.getElementById('pauseTxt').textContent='Pause';
+}
+
+function showEditorDownload(url, seconds){
+  const banner=document.getElementById('editorDlBanner');
+  banner.style.display='flex';
+  document.getElementById('editorDlLink').href=url;
+  const m=String(Math.floor(seconds/60)).padStart(2,'0');
+  const s=String(seconds%60).padStart(2,'0');
+  document.getElementById('recDuration').textContent='Durée : '+m+':'+s;
+}
+
+// === INIT SANS POPUP ===
+window.addEventListener('load', loadDevices);
+
+// === GOOGLE DRIVE — IMPORT PAR LIEN ===
+function toggleGDrive(){
+  const p=document.getElementById('gdrivePanel');
+  p.classList.toggle('on');
+  if(p.classList.contains('on')) document.getElementById('gdriveUrl').focus();
+}
+
+let gdTimer=null;
+function autoImportGDrive(val){
+  const status=document.getElementById('gdriveStatus');
+  clearTimeout(gdTimer);
+  const m=val.match(/\/document\/d\/([a-zA-Z0-9_-]+)/);
+  if(!m){
+    status.textContent=val.length>10?'❌ Lien invalide':'';
+    status.style.color='#e87070';
+    return;
+  }
+  status.textContent='⏳ Chargement...';
+  status.style.color='#B8965A';
+  gdTimer=setTimeout(()=>{
+    fetch('https://docs.google.com/document/d/'+m[1]+'/export?format=txt')
+      .then(r=>{if(!r.ok)throw 0;return r.text();})
+      .then(t=>{
+        document.getElementById('scriptInput').value=t.trim();
+        if(/[؀-ۿ]/.test(t))setLang('ar');
+        status.textContent='✅ Document chargé !';
+        status.style.color='#4CAF50';
+        setTimeout(()=>{ document.getElementById('gdrivePanel').classList.remove('on'); },1200);
+      })
+      .catch(()=>{
+        status.textContent='❌ Partagez le doc publiquement (Tout le monde avec le lien)';
+        status.style.color='#e87070';
+      });
+  },600);
+}
+</script>
+</body>
+</html>
