@@ -899,8 +899,7 @@ function hideLoginOverlay() {
   document.getElementById('loginOverlay').style.display = 'none';
 }
 
-async 
-    function togglePwdVisibility(){
+function togglePwdVisibility(){
       var input = document.getElementById('loginPass');
       var icon = document.getElementById('eyeIcon');
       if(input.type === 'password'){
@@ -912,7 +911,7 @@ async
       }
     }
 
-    function doLogin() {
+    async function doLogin() {
   var login = (document.getElementById('loginUser').value || '').trim();
   var pass = (document.getElementById('loginPass').value || '').trim();
   var btn = document.getElementById('loginBtn');
