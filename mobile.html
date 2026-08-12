@@ -928,7 +928,7 @@ function togglePwdVisibility(){
       body: JSON.stringify({ login: login, password: pass })
     });
     var data = await resp.json();
-    if (data.success) {
+    if (data.ok) {
       startSession(login);
       hideLoginOverlay();
     } else {
