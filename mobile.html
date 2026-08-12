@@ -148,8 +148,17 @@ input[type=range].o::-webkit-slider-runnable-track{height:4px;background:rgba(18
     <p style="color:#888;font-size:13px;margin:0 0 28px">Accès réservé — Entrez vos identifiants</p>
     <input id="loginUser" type="text" placeholder="Login" autocomplete="username"
       style="width:100%;box-sizing:border-box;padding:13px 16px;border-radius:10px;border:1px solid rgba(184,150,90,0.4);background:rgba(255,255,255,0.05);color:#F4ECFF;font-size:15px;font-family:Tajawal,sans-serif;margin-bottom:12px;outline:none;text-align:center"/>
-    <input id="loginPass" type="password" placeholder="Mot de passe" autocomplete="current-password"
-      style="width:100%;box-sizing:border-box;padding:13px 16px;border-radius:10px;border:1px solid rgba(184,150,90,0.4);background:rgba(255,255,255,0.05);color:#F4ECFF;font-size:15px;font-family:Tajawal,sans-serif;margin-bottom:20px;outline:none;text-align:center"/>
+    <div style="position:relative;margin-bottom:20px">
+      <input id="loginPass" type="password" placeholder="Mot de passe" autocomplete="current-password"
+        style="width:100%;box-sizing:border-box;padding:13px 44px 13px 16px;border-radius:10px;border:1px solid rgba(184,150,90,0.4);background:rgba(255,255,255,0.05);color:#F4ECFF;font-size:15px;font-family:Tajawal,sans-serif;outline:none;text-align:center"/>
+      <button type="button" onclick="togglePwdVisibility()" aria-label="Afficher le mot de passe"
+        style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;padding:4px;color:#B8965A;display:flex;align-items:center">
+        <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+      </button>
+    </div>
     <div id="loginError" style="color:#f87171;font-size:13px;margin-bottom:12px;display:none">❌ Identifiants incorrects ou compte inactif</div>
     <button id="loginBtn" onclick="doLogin()"
       style="width:100%;padding:14px;background:linear-gradient(135deg,#B8965A,#d4af7a);color:#0D1A12;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;font-family:Tajawal,sans-serif">
@@ -888,7 +897,20 @@ function hideLoginOverlay() {
   document.getElementById('loginOverlay').style.display = 'none';
 }
 
-async function doLogin() {
+async 
+    function togglePwdVisibility(){
+      var input = document.getElementById('loginPass');
+      var icon = document.getElementById('eyeIcon');
+      if(input.type === 'password'){
+        input.type = 'text';
+        icon.innerHTML = '<path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+      } else {
+        input.type = 'password';
+        icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+      }
+    }
+
+    function doLogin() {
   var login = (document.getElementById('loginUser').value || '').trim();
   var pass = (document.getElementById('loginPass').value || '').trim();
   var btn = document.getElementById('loginBtn');
